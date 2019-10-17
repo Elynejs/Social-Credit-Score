@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const config = require('./config.json');
-const token = require('./token.json');
 
 client.on('ready', () => {
     client.user.setActivity('Generating dongeons');
