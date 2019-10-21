@@ -4,7 +4,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const config = require('./config.json');
 
-// kroopy was here
+// kroop was here... once again
 
 client.on('ready', () => {
     client.user.setActivity('Generating dongeons');
