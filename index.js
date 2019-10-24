@@ -4,8 +4,6 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const config = require('./config.json');
 
-// kroop was here... once again... and again!
-
 client.on('ready', () => {
     client.user.setActivity('Generating dongeons');
     console.log('Bot has been launched without issues!');
