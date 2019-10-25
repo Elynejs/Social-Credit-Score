@@ -5,7 +5,7 @@ const client = new Discord.Client();
 const config = require('./config.json');
 
 client.on('ready', () => {
-    client.user.setActivity('Generating dongeons');
+    client.user.setActivity('Watching your every movement.');
     console.log('Bot has been launched without issues!');
 });
 
