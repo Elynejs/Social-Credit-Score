@@ -14,10 +14,10 @@ client.on('ready', () => {
     }
 });
 
-const banned_words = require('./banned_words.json').toLowerCase();
+const banned_words = require('./banned_words.json');
 
 client.on('message', msg => {
-    if (msg.content.toLowerCase().includes(banned_words)) {
+    if (msg.content.toLowerCase().includes(banned_words.toLowerCase())) {
         guild.fetchMember(msg.author)
             .then();
     }
