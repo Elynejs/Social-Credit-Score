@@ -24,3 +24,5 @@ client.on('message', msg => {
     const args = msg.content.slice(config.token.prefix.length).trim().split(/ /);
     const command = args.shift().toLowerCase();
 });
+
+client.login(config.token);
