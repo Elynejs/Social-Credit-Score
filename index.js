@@ -7,7 +7,8 @@ const intents = new Discord.Intents([
     'GUILD_MEMBERS', // lets you request guild members (i.e. fixes the issue)
 ]);
 const client = new Discord.Client({ws: {intents}});
-const { prefix, token } = require('./config.json');
+const prefix = process.env['prefix'];
+const token = process.env['token'];
 const status = require('./status.js');
 const fs = require('fs');
 let uuid = require('./uuid.json');
@@ -70,3 +71,10 @@ client.on('guildMemberAdd', member => {
 });
 
 client.login(token);
+
+const http = require('http');
+const server = http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end('ok');
+});
+server.listen(3000);
