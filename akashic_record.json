@@ -1,0 +1,22 @@
+{
+    "skills": [
+        {
+            "name": "Appraisal",
+            "id": 1000,
+            "level_min": 1,
+            "level_max": 10,
+            "description": "Returns information about a target.",
+            "passive": false,
+            "evolve": true
+        },
+        {
+            "name": "Wisdom",
+            "id": 1001,
+            "level_min": "Max",
+            "level_max": "Max",
+            "description": "Allows user to view everything about the target.",
+            "passive": true,
+            "evolve": true
+        }
+    ]
+}
