@@ -36,27 +36,28 @@ client.on('message', msg => {
                 let a = args[0]; // what does the command do
                 let b = args[1]; // what does the command change or add
                 let d = record.users.find((status) => status.name === args[args.length-1] || status.id === args[args.length-1]); // who does the command change to
+                if (!d) break; // if d is undefined then return
                 switch(a) {
                 case'add':
                     if (b === 'skill') {
-                        if (record.skills.find((skill) => skill.name === args[2])) {
-                            let c = record.skills.find((skill) => skill.name === args[2]);
-                            d.skills.push(c.id);
+                        if (record.skills.find((skill) => skill.name === args[2] || skill.id === parseInt(args[2]))) {
+                            let c = record.skills.find((skill) => skill.name === args[2] || skill.id === parseInt(args[2]));
+                            d.skills.push(c.name);
                             fs.writeFile('akasha.json', JSON.stringify(record, undefined, 2), (err) => {
                                 if (err) throw err;
                             });
-                            msg.channel.send(`Displaying new status of ${d.name}\n${d}`);
+                            msg.channel.send(`Displaying new status of ${d.name}\n${JSON.stringify(d)}`);
                         } else {
                             msg.channel.send('Skill not found.');
                         }
                     } else if (b === 'title') {
-                        if (record.titles.find((title) => title.name === args[2])) {
-                            let c = record.titles.find((title) => title.name === args[2]);
-                            d.titles.push(c.id);
+                        if (record.titles.find((title) => title.name === args[2] || title.id === parseInt(args[2]))) {
+                            let c = record.titles.find((title) => title.name === args[2] || title.id === parseInt(args[2]));
+                            d.titles.push(c.name);
                             fs.writeFile('akasha.json', JSON.stringify(record, undefined, 2), (err) => {
                                 if (err) throw err;
                             });
-                            msg.channel.send(`Displaying new status of ${d.name}\n${d}`);
+                            msg.channel.send(`Displaying new status of ${d.name}\n${JSON.stringify(d)}`);
                         } else {
                             msg.channel.send('Title not found.');
                         }
@@ -78,6 +79,10 @@ client.on('message', msg => {
                         }
                     } else if (b === 'lvl') {
                         d.lvl = parseInt(args[2]);
+                        fs.writeFile('akasha.json', JSON.stringify(record, undefined, 2), (err) => {
+                            if (err) throw err;
+                        });
+                        msg.channel.send(`Displaying new status of ${d.name}\n${JSON.stringify(d)}`);
                     } else {
                         msg.channel.send('Incorrect or incomplete query.');
                     }
@@ -88,8 +93,8 @@ client.on('message', msg => {
         }
         break;
     case'status':
-        if(record.users.some((id) => id === msg.member.id.toString())) {
-            let user = record.users.find(status => status.id === msg.member.id.toString());
+        if(record.users.find((user) => user.id === msg.member.id)) {
+            let user = record.users.find(status => status.id === msg.member.id);
             msg.channel.send(`Displaying ${msg.member.user.username}'s profile.\n` + JSON.stringify(user));
         } else {
             msg.channel.send('Soul not connected to System.');
@@ -103,7 +108,7 @@ client.on('message', msg => {
 
 client.on('guildMemberAdd', member => {
     //const channel = member.guild.channels.cache.find(ch => ch.name === 'system-log');
-    if (record.users.some((id) => id === member.id.toString())) {
+    if (record.users.find((user) => user.id === member.id)) {
         console.log(`Member ${member.user.username} is already a part of the System.`);
     } else {
         let user = new status(member.id, member.user.username);

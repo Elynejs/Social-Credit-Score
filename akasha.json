@@ -1,51 +1,58 @@
 {
-    "skills": [
+  "skills": [
+    {
+      "name": "Cognitio",
+      "id": 1000,
+      "description": "Returns information about a target."
+    },
+    {
+      "name": "Scientia",
+      "id": 1001,
+      "description": "Allows user to acquire any skill just by wishing it."
+    },
+    {
+      "name": "Prudentia",
+      "id": 1002,
+      "description": "Allow user to assert lies and sense danger."
+    },
+    {
+      "name": "Doctrina",
+      "id": 1003,
+      "description": "Allow user to acquire any knowledge just by wishing it."
+    }
+  ],
+  "titles": [
+    {
+      "name": "Origin",
+      "id": 10,
+      "description": "Creator of the System. The Origin can manipulate the System at will."
+    }
+  ],
+  "users": [
+    {
+      "id": "219476484316856320",
+      "name": "Elyne",
+      "lvl": 5438,
+      "title": [
+        "Origin"
+      ],
+      "stats": [
         {
-            "name": "Cognitio",
-            "id": 1000,
-            "description": "Returns information about a target."
-        },
-        {
-            "name": "Scientia",
-            "id": 1001,
-            "description": "Allows user to acquire any skill just by wishing it."
-        },
-        {
-            "name": "Prudentia",
-            "id": 1002,
-            "description": "Allow user to assert lies and sense danger."
-        },
-        {
-            "name": "Doctrina",
-            "id": 1003,
-            "description": "Allow user to acquire any knowledge just by wishing it."
+          "hp": 271900,
+          "mp": 271900,
+          "vit": 27190,
+          "str": 27190,
+          "dex": 27190,
+          "int": 27190,
+          "wis": 27190
         }
-    ],
-    "titles": [
-        {
-            "name": "Origin",
-            "id": 10,
-            "description": "Creator of the System. The Origin can manipulate the System at will."
-        }
-    ],
-    "users": [
-        {
-          "id": "219476484316856320",
-          "name": "Elyne",
-          "lvl": 0,
-          "title": [10],
-          "stats": [
-            {
-              "hp": 50,
-              "mp": 50,
-              "vit": 5,
-              "str": 5,
-              "dex": 5,
-              "int": 5,
-              "wis": 5
-            }
-          ],
-          "skills": []
-        }
+      ],
+      "skills": [
+        "Cognitio",
+        "Scientia",
+        "Prudentia",
+        "Doctrina"
       ]
+    }
+  ]
 }
