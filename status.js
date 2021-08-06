@@ -3,7 +3,7 @@ module.exports = class status {
         this.uuid = uuid;
         this.name = name;
         this.lvl = 0;
-        this.title = [];
+        this.title = []; // array with title id from akashic record
         this.stats = [{ // stats = [hp0, mp1, vit2, str3, dex4, int5, wis6]
             hp: 50,
             mp: 50,
@@ -13,6 +13,6 @@ module.exports = class status {
             int: 5, // Magic ATK
             wis: 5 // Mana & Mana Regen
         }];
-        this.skills = [];
+        this.skills = []; // array with skill id from akashic record
     }
 };

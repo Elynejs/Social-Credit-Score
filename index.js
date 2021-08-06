@@ -1,6 +1,3 @@
-/* eslint-disable no-case-declarations */
-/* eslint-disable no-unused-vars */
-
 require('dotenv').config();
 const { env } = require('process');
 const Discord = require('discord.js');
@@ -14,8 +11,7 @@ const token = env['CLIENT_TOKEN'];
 const owner = env['OWNER_ID'];
 const status = require('./status.js');
 const fs = require('fs');
-let uuid = require('./uuid.json');
-let record = require('./record.json');
+let record = require('./akasha.json');
 
 client.on('ready', () => {
     client.user.setStatus('dnd');
@@ -31,47 +27,58 @@ client.on('message', msg => {
     switch(command) {
     case 'edit':
         /* args[0] => action: add, set, remove
-           args[1] =>
-           args[2]        
-           args[3]
+           args[1] => actionnable: skill, title, stat, lvl
+           args[2] => name of the actionnable
+           args[3] => name or id of the target
         */
         if (msg.author.id === owner) {
             if (args.length >= 4) {
-                let action = args[0]; // what does the command do
-                let modifier = args[1]; // what does the command change or add
-                let target = record.find(status => status.name === args[3] || status.uuid === args[3]); // who does the command change to
-                switch(action) {
+                let a = args[0]; // what does the command do
+                let b = args[1]; // what does the command change or add
+                let d = record.users.find((status) => status.name === args[args.length-1] || status.id === args[args.length-1]); // who does the command change to
+                switch(a) {
                 case'add':
-                    if (modifier === 'skill') {
-                        // command to add skill to status 
-                        // 1st -> confirm that skill exist, if not return an error
-                        // 2nd -> copy skill from akashic record and append it to target skill array
-                        // 3rd -> if need, adjust stats according to skill effect
-                        // args[2] -> 'skill name'
-                        // args[3] -> either 'username' or 'uuid' or akashic record
-                    } else if (modifier === 'title') {
-                        // command to add title to status 
-                        // args[2] -> 'title name'
-                        // args[3] -> either 'username' or 'uuid' or akashic record
+                    if (b === 'skill') {
+                        if (record.skills.find((skill) => skill.name === args[2])) {
+                            let c = record.skills.find((skill) => skill.name === args[2]);
+                            d.skills.push(c.id);
+                            fs.writeFile('akasha.json', JSON.stringify(record, undefined, 2), (err) => {
+                                if (err) throw err;
+                            });
+                            msg.channel.send(`Displaying new status of ${d.name}\n${d}`);
+                        } else {
+                            msg.channel.send('Skill not found.');
+                        }
+                    } else if (b === 'title') {
+                        if (record.titles.find((title) => title.name === args[2])) {
+                            let c = record.titles.find((title) => title.name === args[2]);
+                            d.titles.push(c.id);
+                            fs.writeFile('akasha.json', JSON.stringify(record, undefined, 2), (err) => {
+                                if (err) throw err;
+                            });
+                            msg.channel.send(`Displaying new status of ${d.name}\n${d}`);
+                        } else {
+                            msg.channel.send('Title not found.');
+                        }
                     } else {
                         msg.channel.send('Incorrect or incomplete query.');
                     }
                     break;
                 case'set':
-                    if (modifier === 'stat') {
-                    // command to set stats to status 
-                    // args[2] -> 'stat array'
-                    // args[3] -> either 'username' or 'uuid'
-                    } else if (modifier === 'lvl') {
-                    // command to set lvl to status 
-                    // args[2] -> 'lvl value'
-                    // args[3] -> either 'username' or 'uuid'
-                    } else if (modifier === 'skill') {
-                    // command to set skill level to status 
-                    // args[2] -> 'skill name'
-                    // args[3] -> skill level
-                    // args[4] -> either 'username' or 'uuid'
-                    } else{
+                    if (b === 'stat') {
+                        switch(args[2]) {
+                        case'hp': d.stats.hp = parseInt(args[3]);break;
+                        case'mp': d.stats.mp = parseInt(args[3]);break;
+                        case'vit': d.stats.vit = parseInt(args[3]);break;
+                        case'str': d.stats.str = parseInt(args[3]);break;
+                        case'dex': d.stats.dex = parseInt(args[3]);break;
+                        case'int': d.stats.int = parseInt(args[3]);break;
+                        case'wis': d.stats.wis = parseInt(args[3]);break;
+                        default: msg.channel.send('Incorrect or incomplete query.');
+                        }
+                    } else if (b === 'lvl') {
+                        d.lvl = parseInt(args[2]);
+                    } else {
                         msg.channel.send('Incorrect or incomplete query.');
                     }
                 }
@@ -81,8 +88,8 @@ client.on('message', msg => {
         }
         break;
     case'status':
-        if(uuid.some((id) => id === msg.member.id)) {
-            let user = record.find(status => status.uuid === msg.member.id);
+        if(record.users.some((id) => id === msg.member.id.toString())) {
+            let user = record.users.find(status => status.id === msg.member.id.toString());
             msg.channel.send(`Displaying ${msg.member.user.username}'s profile.\n` + JSON.stringify(user));
         } else {
             msg.channel.send('Soul not connected to System.');
@@ -95,26 +102,16 @@ client.on('message', msg => {
 });
 
 client.on('guildMemberAdd', member => {
-    const channel = member.guild.channels.cache.find(ch => ch.name === 'system-log');
-    if (uuid.some((id) => id === member.id)) {
+    //const channel = member.guild.channels.cache.find(ch => ch.name === 'system-log');
+    if (record.users.some((id) => id === member.id.toString())) {
         console.log(`Member ${member.user.username} is already a part of the System.`);
     } else {
-        channel.send('New User detected.\nSaving unique User ID to database...');
-        uuid.push(member.id);
-        fs.writeFile('uuid.json', JSON.stringify(uuid, undefined, 2), (err) => {
-            if (err) throw err;
-        });
-        channel.send('UUID successfully added to System database. \nGenerating new status profile...');
         let user = new status(member.id, member.user.username);
-        channel.send('Profile generated. \nSaving profile to database...');
-        record.push(user);
-        fs.writeFile('record.json', JSON.stringify(record, undefined, 2), (err) => {
+        record.users.push(user);
+        fs.writeFile('akasha.json', JSON.stringify(record, undefined, 2), (err) => {
             if (err) throw err;
-            channel.send('Profile saved successfully.\n');
         });
-        channel.send('Connecting System to User Soul.\n');
         member.roles.add('869616861069860875');
-        channel.send(`Displaying profile to User ${member.user.username}\n` + JSON.stringify(user));
     }
 });
 
