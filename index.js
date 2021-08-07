@@ -95,7 +95,62 @@ client.on('message', msg => {
     case'status':
         if(record.users.find((user) => user.id === msg.member.id)) {
             let user = record.users.find(status => status.id === msg.member.id);
-            msg.channel.send(`Displaying ${msg.member.user.username}'s profile.\n` + JSON.stringify(user));
+            //msg.channel.send(`Displaying ${msg.member.user.username}'s profile.\n` + JSON.stringify(user));
+            msg.channel.send({
+                color: 11342935,
+                title: '**Status**',
+                description: ' ',
+                fields: [
+                    {
+                        name: '**Title:**',
+                        value: ' ' + user.title
+                    },
+                    {
+                        name: '**Level:**',
+                        value: ' ' + user.lvl
+                    },
+                    {
+                        name: '**HP:**',
+                        value: ' ' + user.stats[0].hp,
+                        inline: true
+                    },
+                    {
+                        name: '**MP:**',
+                        value: ' ' + user.stats[0].mp,
+                        inline: true
+                    },
+                    {
+                        name: '**VIT:**',
+                        value: ' ' + user.stats[0].vit,
+                        inline: true
+                    },
+                    {
+                        name: '**STR:**',
+                        value: ' ' + user.stats[0].str,
+                        inline: true
+                    },
+                    {
+                        name: '**DEX:**',
+                        value: ' ' + user.stats[0].dex,
+                        inline: true
+                    },
+                    {
+                        name: '**INT:**',
+                        value: ' ' + user.stats[0].int,
+                        inline: true
+                    },
+                    {
+                        name: '**WIS:**',
+                        value: ' ' + user.stats[0].wis,
+                        inline: true
+                    },
+                    {
+                        name: '**Skills**',
+                        value: ' ' + user.skills
+                    }
+                ],
+                
+            });
         } else {
             msg.channel.send('Soul not connected to System.');
         }
